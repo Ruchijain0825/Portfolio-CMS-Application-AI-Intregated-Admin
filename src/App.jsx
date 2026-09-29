@@ -5,7 +5,6 @@ import Login from "./components/pages/Login";
 import Dashboard from "./components/pages/Dashboard";
 import About from "./components/pages/About";
 import Skills from "./components/pages/Skills";
-import Projects from "./components/pages/Projects";
 import Experience from "./components/pages/Experience";
 import Project from "./components/pages/Project";
 

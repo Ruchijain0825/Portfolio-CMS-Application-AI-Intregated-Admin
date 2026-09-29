@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import { createProject,getProjectById,getProjects,updateProject,deleteProject,searchProjects } from "../services/projectapi";
 import {
   Plus,
   Pencil,
@@ -11,6 +12,11 @@ import {
 } from "lucide-react";
 
 const Projects = () => {
+
+
+  const[error,setIsError]=useState(false);
+  const[isLoading,setIsLoading]=useState(false);
+
   const [projects, setProjects] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [editingId, setEditingId] = useState(null);
@@ -34,6 +40,28 @@ const Projects = () => {
   const [roleInput, setRoleInput] = useState("");
   const [technologyInput, setTechnologyInput] = useState("");
 
+
+  const fetchProjects = async()=>
+  {
+    try
+    {
+      const data = await getProjects();
+      if(data.success)
+      {
+        setProjects(data.projects);
+
+      }
+  }
+  catch(error)
+  {
+    console.log(error);
+    toast.error("error while fetching records")
+  }
+};
+useEffect(()=>
+{
+  fetchProjects();
+},[])
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
 
@@ -136,34 +164,93 @@ const Projects = () => {
     e.preventDefault();
 
     try {
-      /*
-        Yahan apni create/update API call laga dena.
+         const payload = {
+  ...formData,
 
-        Example:
+  role: Array.isArray(formData.role)
+    ? formData.role
+    : formData.role
+        .split(",")
+        .map(item => item.trim())
+        .filter(Boolean),
 
-        if (editingId) {
-          await updateProjectApi(editingId, formData);
-        } else {
-          await createProjectApi(formData);
-        }
-      */
-
+  technologies: Array.isArray(formData.technologies)
+    ? formData.technologies
+    : formData.technologies
+        .split(",")
+        .map(item => item.trim())
+        .filter(Boolean),
+};
+         let data;
+         if(editingId)
+         {
+         data = await updateProject(editingId,payload);
+         }
+         else{
+          data = await createProject(payload)
+         }
+         if(data.success)
+         {
       toast.success(
         editingId
           ? "Project updated successfully"
           : "Project created successfully"
-      );
-
+      )};
+       setEditingId(null);
       setShowModal(false);
       resetForm();
+      setFormData({
+        name: "",
+        description: "",
+        start_date: "",
+        end_date: "",
+        project_type: "",
+        role: "",
+        team_project: false,
+        technologies: "",
+        github_url: "",
+        live_url: "",
+        image_url: "",
+        is_active: true,
+        display_order: 0
+      });
 
-      // API ke baad dobara projects fetch karna.
-      // fetchProjects();
+      fetchProjects();
     } catch (error) {
       toast.error(error.message || "Something went wrong");
     }
   };
-
+  const handleEdit = async(id)=>
+  {
+    try{
+      const data = await getProjectById(id);
+      if(data.success)
+      {
+        const project = data.project;
+        setFormData({
+        name: project.name || "",
+        description: project.description || "",
+        start_date: project.start_date || "",
+        end_date: project.end_date || "",
+        project_type: project.project_type || "",
+        role: project.role || "",
+        team_project: project.team_project || false,
+        technologies: project.technologies || "",
+        github_url: project.github_url || "",
+        live_url: project.live_url || "",
+        image_url: project.image_url || "",
+        is_active: project.is_active ?? true,
+        display_order: project.display_order ?? 0
+      });
+      setEditingId(id)
+      }
+    }
+    catch(error)
+    {
+      console.log(error);
+      toast.error(error.message)
+    }
+  }
   const handleDelete = async (id) => {
     const confirmDelete = window.confirm(
       "Are you sure you want to delete this project?"
@@ -172,10 +259,7 @@ const Projects = () => {
     if (!confirmDelete) return;
 
     try {
-      /*
-        await deleteProjectApi(id);
-        fetchProjects();
-      */
+       await deleteProject(id)
 
       setProjects((prev) => prev.filter((project) => project.id !== id));
 
@@ -288,19 +372,33 @@ const Projects = () => {
                   </p>
 
                   {/* TECHNOLOGIES */}
-                  <div className="flex flex-wrap gap-2 mt-3">
-                    {project.technologies?.slice(0, 5).map(
-                      (technology, index) => (
-                        <span
-                          key={index}
-                          className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-md"
-                        >
-                          {technology}
-                        </span>
-                      )
-                    )}
-                  </div>
+                            {/* ROLE */}
+{project.role?.length > 0 && (
+  <div className="flex flex-wrap gap-2 mt-2">
+    {project.role.map((role, index) => (
+      <span
+        key={index}
+        className="px-2.5 py-1 rounded-full bg-purple-50 text-purple-600 text-xs"
+      >
+        {role}
+      </span>
+    ))}
+  </div>
+)}
 
+{/* TECHNOLOGIES */}
+{project.technologies?.length > 0 && (
+  <div className="flex flex-wrap gap-2 mt-2">
+    {project.technologies.map((tech, index) => (
+      <span
+        key={index}
+        className="px-2.5 py-1 rounded-full bg-blue-50 text-blue-600 text-xs"
+      >
+        {tech}
+      </span>
+    ))}
+  </div>
+)}
                 </div>
 
                 {/* LINKS */}
