@@ -6,11 +6,11 @@ import {
 const menuItems = [
   { name: "Dashboard", icon: LayoutDashboard, path: "/dashboard" },
   { name: "About", icon: UserRound, path: "/admin/about" },
-  { name: "Skills", icon: Code2, path: "/dashboard/skills" },
+  { name: "Skills", icon: Code2, path: "/admin/skills" },
   { name: "Experience", icon: Briefcase, path: "/admin/experience" },
   { name: "Projects", icon: FolderKanban, path: "/admin/project" },
-  { name: "Education", icon: GraduationCap, path: "/dashboard/education" },
-  { name: "Blog / Articles", icon: FileText, path: "/dashboard/blog" },
+  { name: "Education", icon: GraduationCap, path: "/admin/education" },
+  { name: "Blog / Articles", icon: FileText, path: "/admin/blog" },
   { name: "Messages", icon: Mail, path: "/dashboard/messages" }
 ];
 
