@@ -11,7 +11,7 @@ const menuItems = [
   { name: "Projects", icon: FolderKanban, path: "/admin/project" },
   { name: "Education", icon: GraduationCap, path: "/admin/education" },
   { name: "Blog / Articles", icon: FileText, path: "/admin/blog" },
-  { name: "Messages", icon: Mail, path: "/dashboard/messages" }
+  { name: "Messages", icon: Mail, path: "/admin/messages" }
 ];
 
 const bottomItems = [

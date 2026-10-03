@@ -9,6 +9,7 @@ import Experience from "./components/pages/Experience";
 import Project from "./components/pages/Project";
 import Education from "./components/pages/Education";
 import Blog from "./components/pages/Blog";
+import Messages from "./components/pages/Message";
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
           <Route path="education" element={<Education/>} />
           <Route path="experience" element={<Experience />} />
           <Route path="blog" element={<Blog />} />
+          <Route path = "messages" element ={<Messages/>}/>
          
         </Route>
       </Routes>
